@@ -1,4 +1,6 @@
 # https://medium.com/nanonets/how-to-classify-fashion-images-easily-using-convnets-81e1e0019ffe  
+# https://github.com/khanhnamle1994/fashion-mnist/blob/master/CNN-1Conv.ipynb
+import keras
 from keras.utils import to_categorical
 from sklearn.model_selection import train_test_split
 import pandas as pd
@@ -34,12 +36,18 @@ from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
 
 cnn1 = Sequential()
-cnn1.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape='input_shape'))
+cnn1.add(Conv2D(32, kernel_size=(3, 3), activation='relu', input_shape=input_shape))
 cnn1.add(MaxPooling2D(pool_size=(2, 2)))
 cnn1.add(Dropout(0.2))
+
 cnn1.add(Flatten())
 
-cnn1.add(Dense(128, activation='relu'))
-cnn1.add(Dense(10, activation='softmax'))
+cnn1.add(Dense(units=128, activation='relu'))
+cnn1.add(Dense(units=10, activation='softmax'))
 
-cnn1.compile(loss=keras.losses.categorical_crosssentropy, optimizer=keras.optimizer.Adam(), metrics=['accuracy'])
+cnn1.summary()
+cnn1.compile(loss=keras.losses.categorical_crossentropy, optimizer=keras.optimizers.Adam(), metrics=['accuracy'])
+history1 = cnn1.fit(X_train, y_train, batch_size=256, epochs=10, verbose=1, validation_data=(X_val, y_val))
+score1 = cnn1.evaluate(X_test, y_test, verbose=0)
+print('Test loss : ', score1[0])
+print('Test accuracy : ', score1[1])
